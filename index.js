@@ -29,7 +29,11 @@ bot.on(BotEvents.MESSAGE_RECEIVED, (message, response) => {
 });
 
 
-
+app.post('/webhook', (req, res) => {
+  const payload = req.body;
+  // handle payload here
+  res.status(200).json({ message: 'Webhook received' });
+});
 
 // app.post('/webhook', (req, res) => {
 //   const payload = req.body;
