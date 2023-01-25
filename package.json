@@ -1,0 +1,23 @@
+{
+  "name": "viber-bot-sample",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "simple-git": "^3.16.0",
+    "viber-bot": "^1.0.18",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "viber-chat-bot-test"
+  },
+  "description": ""
+}
