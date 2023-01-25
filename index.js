@@ -20,39 +20,34 @@ const bot = new ViberBot({
 });
 
 
-// bot.on(BotEvents.MESSAGE_RECEIVED, (message, response) => {
-//   response.send(new TextMessage('hi'));
-// });
-
-
-app.post('/webhook', (req, res) => {
-  const payload = req.body;
-  if(payload.action === 'opened' && payload.pull_request){
-      let pullRequest = payload.pull_request;
-      bot.sendMessage({
-          receiver: 'user_id',
-          min_api_version: 2,
-          sender: {
-              name: 'Your bot name'
-          },
-          type: 'text',
-          text: 'New pull request in this repository: ${pullRequest.title}'
-      });
-  }
-});
-
- 
-
-
-
-
 bot.on(BotEvents.SUBSCRIBED, response => {
   response.send(new TextMessage(`Hi there ${response.userProfile.name}. I am ${bot.name}! Feel free to ask me anything.`));
 });
+
 bot.on(BotEvents.MESSAGE_RECEIVED, (message, response) => {
   response.send(message);
-
 });
+
+
+
+
+// app.post('/webhook', (req, res) => {
+//   const payload = req.body;
+//   if(payload.action === 'opened' && payload.pull_request){
+//       let pullRequest = payload.pull_request;
+//       bot.sendMessage({
+//           receiver: 'user_id',
+//           min_api_version: 2,
+//           sender: {
+//               name: 'Your bot name'
+//           },
+//           type: 'text',
+//           text: 'New pull request in this repository: ${pullRequest.title}'
+//       });
+//   }
+// });
+//test
+
 const port = process.env.PORT || 3000;
 app.use("/viber/webhook", bot.middleware());
 app.listen(port, () => {
