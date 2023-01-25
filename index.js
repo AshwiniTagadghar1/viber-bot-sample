@@ -47,6 +47,7 @@ bot.on(BotEvents.MESSAGE_RECEIVED, (message, response) => {
 //   }
 // });
 //test
+//test2
 
 const port = process.env.PORT || 3000;
 app.use("/viber/webhook", bot.middleware());
