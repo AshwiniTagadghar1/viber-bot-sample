@@ -51,14 +51,14 @@ app.post('/github/webhook', (req, res) => {
         if (pullRequest.action === 'opened') {
             // Send a message to the Viber bot subscriber
             console.log("near bot sending notification")
-            bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened: ${pullRequest.pull_request.title}`));
+            bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened`));
         }
     }
     //for push event
     if (req.headers['x-github-event'] === 'push') {
       const subscriberId = 'V3WfzB0PnxzAy9Q3f5N7Dw==';
       bot.sendMessage(subscriberId, new TextMessage(`A push event was just triggered`));
-  }
+    }
     res.sendStatus(200);
 });
 
