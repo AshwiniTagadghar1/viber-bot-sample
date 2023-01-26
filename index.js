@@ -57,7 +57,7 @@ app.post('/github/webhook', (req, res) => {
     //for push event
     if (req.headers['x-github-event'] === 'push') {
       const subscriberId = 'V3WfzB0PnxzAy9Q3f5N7Dw==';
-      bot.sendMessage(subscriberId, new TextMessage(`A push event was just triggered in ${req.body.repository.name}`));
+      bot.sendMessage(subscriberId, new TextMessage(`A push event was just triggered`));
   }
     res.sendStatus(200);
 });
