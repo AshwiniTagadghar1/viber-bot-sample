@@ -64,7 +64,7 @@ bot.on(BotEvents.CONVERSATION_STARTED, (userProfile, isSubscribed, context, onFi
 
 app.use("/viber/webhook", bot.middleware());
 
-app.post('/github-webhook', (req, res) => {
+app.post('/github/webhook', (req, res) => {
   if (req.headers['x-github-event'] === 'push') {
       const subscriberId = 'V3WfzB0PnxzAy9Q3f5N7Dw==';
       bot.sendMessage(subscriberId, new TextMessage(`A push event was just triggered in ${req.body.repository.name}`));
