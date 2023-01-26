@@ -1,65 +1,58 @@
-const ViberBot = require('viber-bot').Bot,
-BotEvents = require('viber-bot').Events,
-TextMessage = require('viber-bot').Message.Text,
-express = require('express');
+const express = require('express');
+const ViberBot = require('viber-bot').Bot;
+const BotEvents = require('viber-bot').Events;
+const TextMessage = require('viber-bot').Message.Text;
+
 const app = express();
 
-if (!process.env.BOT_ACCOUNT_TOKEN) {
-  console.log('Could not find bot account token key.');
-  return;
-}
-if (!process.env.EXPOSE_URL) {
-  console.log('Could not find exposing url');
-  return;
-}
+// Your Viber bot's Auth Token
+const VIBER_BOT_TOKEN = '5072e9f1c467e643-f7f0ec35d9acd847-21aab1f7e56301e2';
 
+// Create a new instance of the Viber bot
 const bot = new ViberBot({
-  authToken: process.env.BOT_ACCOUNT_TOKEN,
-  name: "GOSS Chat Bot",
-  avatar: "https://upload.wikimedia.org/wikipedia/commons/3/3d/Katze_weiss.png"
+    authToken: VIBER_BOT_TOKEN,
+    name: "MyGitHubBot",
+    avatar: "http://viber.com/avatar.jpg"
 });
 
 
-bot.on(BotEvents.SUBSCRIBED, response => {
-  response.send(new TextMessage(`Hi there ${response.userProfile.name}. I am ${bot.name}! Feel free to ask me anything.`));
+// set the webhook URL for the bot
+bot.setWebhook('https://4148-180-34-52-24.ngrok.io/viber/webhook');
+
+// Register the bot with the express app
+bot.on(BotEvents.SUBSCRIBED, async response => {
+    console.log("Bot subscribed to user: ", response);
+    try {
+      const subscriberDetails = await bot.get_user_details(response.userProfile.id);
+      console.log(subscriberDetails);
+    } catch (err) {
+      console.log(err);
+    }
 });
 
-bot.on(BotEvents.MESSAGE_RECEIVED, (message, response) => {
-  response.send(message);
+bot.on(BotEvents.MESSAGE_RECEIVED, message => {
+    console.log("Bot received a message: ", message);
+
 });
 
-
-app.post('/webhook', (req, res) => {
-  const payload = req.body;
-  // handle payload here
-  res.status(200).json({ message: 'Webhook received' });
-});
-
-// app.post('/webhook', (req, res) => {
-//   const payload = req.body;
-//   if(payload.action === 'opened' && payload.pull_request){
-//       let pullRequest = payload.pull_request;
-//       bot.sendMessage({
-//           receiver: 'user_id',
-//           min_api_version: 2,
-//           sender: {
-//               name: 'Your bot name'
-//           },
-//           type: 'text',
-//           text: 'New pull request in this repository: ${pullRequest.title}'
-//       });
-//   }
-// });
-//test
-//test2
-
-const port = process.env.PORT || 3000;
 app.use("/viber/webhook", bot.middleware());
-app.listen(port, () => {
-  console.log(`Application running on port: ${port}`);
-  bot.setWebhook(`${process.env.EXPOSE_URL}/viber/webhook`).catch(error => {
-      console.log('Can not set webhook on following server. Is it running?');
-      console.error(error);
-      process.exit(1);
-  });
+
+
+
+app.post('/github/webhook', (req, res) => {
+    if (req.headers['x-github-event'] === 'pull_request') {
+        const pullRequest = req.body;
+        // check if the pull request action is 'opened'
+        if (pullRequest.action === 'opened') {
+            // Send a message to the Viber bot subscriber
+            console.log("near bot sending notification")
+            bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened: ${pullRequest.pull_request.title}`));
+        }
+    }
+    res.sendStatus(200);
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
