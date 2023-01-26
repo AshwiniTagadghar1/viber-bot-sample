@@ -30,27 +30,48 @@ bot.on(BotEvents.SUBSCRIBED, async response => {
     }
 });
 
+
+
+
+
+
 bot.on(BotEvents.MESSAGE_RECEIVED, message => {
     console.log("Bot received a message: ", message);
 
 });
 
+// app.use("/viber/webhook", bot.middleware());
+
+
+
+// app.post('/github/webhook', (req, res) => {
+//     if (req.headers['x-github-event'] === 'pull_request') {
+//         const pullRequest = req.body;
+//         // check if the pull request action is 'opened'
+//         if (pullRequest.action === 'opened') {
+//             // Send a message to the Viber bot subscriber
+//             console.log("near bot sending notification")
+//             bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened: ${pullRequest.pull_request.title}`));
+//         }
+//     }
+//     res.sendStatus(200);
+// });
+
+bot.on(BotEvents.CONVERSATION_STARTED, (userProfile, isSubscribed, context, onFinish) => {
+  console.log("User ID: " + userProfile.id);
+  onFinish(null);
+});
+
 app.use("/viber/webhook", bot.middleware());
 
-
-
-app.post('/github/webhook', (req, res) => {
-    if (req.headers['x-github-event'] === 'pull_request') {
-        const pullRequest = req.body;
-        // check if the pull request action is 'opened'
-        if (pullRequest.action === 'opened') {
-            // Send a message to the Viber bot subscriber
-            console.log("near bot sending notification")
-            bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened: ${pullRequest.pull_request.title}`));
-        }
-    }
-    res.sendStatus(200);
+app.post('/github-webhook', (req, res) => {
+  if (req.headers['x-github-event'] === 'push') {
+      const subscriberId = 'V3WfzB0PnxzAy9Q3f5N7Dw==';
+      bot.sendMessage(subscriberId, new TextMessage(`A push event was just triggered in ${req.body.repository.name}`));
+  }
+  res.sendStatus(200);
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
