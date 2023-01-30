@@ -17,7 +17,7 @@ const bot = new ViberBot({
 
 
 // set the webhook URL for the bot
-bot.setWebhook('https://4148-180-34-52-24.ngrok.io/viber/webhook');
+bot.setWebhook('https://9b52-180-34-52-24.ngrok.io/viber/webhook');
 
 // Register the bot with the express app
 bot.on(BotEvents.SUBSCRIBED, async response => {
@@ -45,7 +45,7 @@ app.use("/viber/webhook", bot.middleware());
 
 app.post('/github/webhook', (req, res) => {
   //for pull request event
-    if (req.headers['x-github-event'] === 'pull_request') {
+    if (req.headers['X-GitHub-Event'] === 'pull_request') {
         const pullRequest = req.body;
         // check if the pull request action is 'opened'
         if (pullRequest.action === 'opened') {
@@ -54,8 +54,8 @@ app.post('/github/webhook', (req, res) => {
             bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened`));
         }
     }
-    //for push event
-    if (req.headers['x-github-event'] === 'push') {
+    //for push events
+    if (req.headers['X-GitHub-Event'] === 'push') {
       const subscriberId = 'V3WfzB0PnxzAy9Q3f5N7Dw==';
       bot.sendMessage(subscriberId, new TextMessage(`A push event was just triggered`));
     }
