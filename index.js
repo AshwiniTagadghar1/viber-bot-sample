@@ -6,7 +6,7 @@ const TextMessage = require('viber-bot').Message.Text;
 
 const app = express();
 
-// app.use(bodyParser.json()); 
+ app.use(bodyParser.json()); 
 var jsonParser = bodyParser.json()
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -70,7 +70,9 @@ app.post('/github/webhook', (req, res) => {
 
     // Send a message to the Viber bot subscriber
     // console.log("near bot sending notification")
-    bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened ${JSON.stringify(req.body.pull_request.user.login)}`));
+    
+
+    bot.sendMessage({ id: 'V3WfzB0PnxzAy9Q3f5N7Dw==' }, new TextMessage(`A new pull request has been opened ${JSON.stringify(req.body.pull_request.user.login)} \n ${JSON.stringify(req.body.pull_request.html_url)}`));
 
   }
   //for push events
